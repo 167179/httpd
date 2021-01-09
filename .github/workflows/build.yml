@@ -17,10 +17,12 @@ jobs:
       - uses: actions/checkout@v2
         name: checkout apr
         with:
-          path: ../apr
+          path: ./libapr
           repository: git@github.com:apache/apr.git
       - name: install libaprutil1-dev
         run: apt install libaprutil1-dev
+      - name: run buildconf
+        run: ./buildconf --with-apr=./libapr
       - name: download sonar scanner
         run: wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.5.0.2216-linux.zip
       - name: unzip sonar scanner
