@@ -11,8 +11,16 @@ jobs:
     runs-on: Ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+        name: checkout httpd
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: actions/checkout@v2
+        name: checkout apr
+        with:
+          path: ../apr
+          repository: git@github.com:apache/apr.git
+      - name: install libaprutil1-dev
+        run: apt install libaprutil1-dev
       - name: download sonar scanner
         run: wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.5.0.2216-linux.zip
       - name: unzip sonar scanner
