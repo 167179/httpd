@@ -24,7 +24,7 @@ jobs:
       - name: install libaprutil1-dev
         run: sudo apt install libaprutil1-dev
       - name: run buildconf
-        run: ./buildconf --with-apr=./libapr
+        run: ./buildconf
         working-directory: httpd
       - name: download sonar scanner
         run: wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.5.0.2216-linux.zip
