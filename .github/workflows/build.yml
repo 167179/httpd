@@ -22,7 +22,7 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
           repository: apache/apr
       - name: install libaprutil1-dev
-        run: apt install libaprutil1-dev
+        run: sudo apt install libaprutil1-dev
       - name: run buildconf
         run: ./buildconf --with-apr=./libapr
         working-directory: httpd
