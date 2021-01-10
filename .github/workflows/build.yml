@@ -1,4 +1,4 @@
-name: Build
+name: Build httpd
 on:
   push:
     branches:
@@ -11,22 +11,42 @@ jobs:
     runs-on: Ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+        name: checkout httpd
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          path: httpd
+      - uses: actions/checkout@v2
+        name: checkout apr
+        with:
+          path: apr
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          repository: apache/apr
+      - name: install libaprutil1-dev
+        run: sudo apt install libaprutil1-dev
+      - name: run buildconf
+        run: ./buildconf
+        working-directory: httpd
       - name: download sonar scanner
         run: wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.5.0.2216-linux.zip
+        working-directory: httpd
       - name: unzip sonar scanner
         run: unzip sonar-scanner-cli-4.5.0.2216-linux.zip
+        working-directory: httpd
       - name: download build wrapper
         run: wget http://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
+        working-directory: httpd
       - name: unzip build wrapper
         run: unzip ./build-wrapper-linux-x86.zip
+        working-directory: httpd
       - name: run configure
         run: ./configure
+        working-directory: httpd
       - name: run build wrapper
-        run: ./build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir build_wrapper_output_directory make clean all
+        run: ./build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir build_wrapper_output_directory make
+        working-directory: httpd
       - name: run sonar scanner
         run: ./sonar-scanner-4.5.0.2216-linux/bin/sonar-scanner   -Dsonar.organization=$SONAR_ORG   -Dsonar.projectKey=$SONAR_PROJECT_KEY   -Dsonar.sources=.   -Dsonar.host.url=https://sonarcloud.io
+        working-directory: httpd
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
